@@ -1,63 +1,37 @@
 document.addEventListener('DOMContentLoaded', function() {
     const downloadBtn = document.getElementById('downloadBtn');
     const contentLockModal = document.getElementById('contentLockModal');
-    const closeModalBtn = document.getElementById('closeModal');
-    const socialBtns = document.querySelectorAll('.social-btn');
     
-    // Open modal when download button is clicked
+    // Setup download button click handler
     if (downloadBtn) {
         downloadBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            contentLockModal.style.display = 'flex';
+            
+            // Initialize content locker variables
+            window.ogblock = true;
+            
+            // Create and inject the content locker script
+            const ogScript = document.createElement('script');
+            ogScript.type = 'text/javascript';
+            ogScript.id = 'ogjs';
+            ogScript.src = 'https://appinstallcheck.com/cl/js/ndrkxk';
+            document.body.appendChild(ogScript);
+            
+            // Check if ad blocker is active after a short delay
+            setTimeout(function() {
+                if(window.ogblock) {
+                    window.location.href = "https://appinstallcheck.com/adblock";
+                }
+                // If ogblock was set to false by the script, the locker will handle the download
+            }, 500);
         });
     }
     
-    // Close modal when clicking the close button
-    if (closeModalBtn) {
-        closeModalBtn.addEventListener('click', function() {
-            contentLockModal.style.display = 'none';
-        });
-    }
-    
-    // Close modal when clicking outside of it
-    window.addEventListener('click', function(e) {
-        if (e.target === contentLockModal) {
-            contentLockModal.style.display = 'none';
-        }
-    });
-    
-    // Handle social button clicks to unlock content
-    if (socialBtns) {
-        socialBtns.forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // This would normally open a popup for social sharing
-                const socialNetwork = this.getAttribute('data-social');
-                
-                // Simulate successful sharing/following
-                setTimeout(() => {
-                    // Hide the modal
-                    contentLockModal.style.display = 'none';
-                    
-                    // Show success message
-                    alert(`Thank you for sharing on ${socialNetwork}! Your download is starting.`);
-                    
-                    // Here you would redirect to the actual download
-                    // For demo purposes, we'll just simulate a download
-                    const bookTitle = document.querySelector('.book-title').textContent;
-                    const dummyLink = document.createElement('a');
-                    dummyLink.setAttribute('href', `#${bookTitle.toLowerCase().replace(/\s+/g, '-')}-download`);
-                    dummyLink.setAttribute('download', `${bookTitle}.pdf`);
-                    document.body.appendChild(dummyLink);
-                    dummyLink.click();
-                    document.body.removeChild(dummyLink);
-                    
-                }, 1000);
-                
-                // In a real implementation, you'd include code to verify the share
-                // happened before providing the download
-            });
-        });
-    }
+    // Add a noscript tag to handle users with JavaScript disabled
+    const noscriptTag = document.createElement('noscript');
+    const metaRefresh = document.createElement('meta');
+    metaRefresh.setAttribute('http-equiv', 'refresh');
+    metaRefresh.setAttribute('content', '0;url=https://appinstallcheck.com/noscript');
+    noscriptTag.appendChild(metaRefresh);
+    document.head.appendChild(noscriptTag);
 });
